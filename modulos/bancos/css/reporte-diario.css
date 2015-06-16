@@ -1,0 +1,82 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 07/04/2015, 21:30:22
+    Author     : Carlos
+*/
+table{
+    width: 100%;
+    margin: 20px 0px 0px 0px;
+    padding: 0;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+p{
+    width: 100%;
+    margin: 0px;
+    padding: 0;
+    font-size: 13px;
+}
+.labels{
+    width: 12%;
+    display: inline-block;
+    padding: 5px 5px 5px 0px;
+    text-align: right
+}
+.dato{
+    width: 85%;
+    display: inline-block;
+    padding: 5px 0px 5px 5px;
+    text-align: left
+}
+.titulo{
+    text-align: center;
+}
+.codigo{
+    text-align: center;
+}
+.nombre{
+    padding-left: 5px;
+}
+table thead th{
+    border: 1px solid black;
+}
+table tbody{
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+table tbody td{
+    padding: 5px 5px 5px 0px;
+}
+table tfoot td{
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    text-align: right;
+    padding: 5px 5px 5px 0px;
+}
+.descripcion{
+    padding-left: 5px;
+    text-align: left;
+}
+.nombre_cuenta{
+    padding-right: 10px;
+    text-align: right;
+}
+.dinero{
+    text-align: right;
+    padding-right: 5px;
+}
+.auditoria{
+    margin: 25px 0px;
+    border: 1px solid black;
+}
+.auditoria td{
+    border: 1px solid black;
+    padding: 55px 0px 0px 0px;
+    text-align: center;
+}

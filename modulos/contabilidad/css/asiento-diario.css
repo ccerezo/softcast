@@ -1,0 +1,210 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 17/03/2015, 10:39:00
+    Author     : Carlos
+*/
+
+/*SCROLL*/
+
+#wrapper {
+	padding: 15px;
+}
+label.error {
+    color: red;
+    font-weight: normal;
+    font-style: italic;
+    font-size: 12px;
+}
+
+.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+.dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+.cabecera{
+	margin: 0 0 10px 0;
+	padding: 10px 0px;
+	font-size: 11px;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	font-weight: bold;
+	background: #3a5795; /* Old browsers */
+	background: -moz-linear-gradient(top,  #3a5795 0%, #194293 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3a5795), color-stop(100%,#194293)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #3a5795 0%,#194293 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #3a5795 0%,#194293 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #3a5795 0%,#194293 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #3a5795 0%,#194293 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a5795', endColorstr='#194293',GradientType=0 ); /* IE6-9 */
+
+}
+.cabecera_oculta{
+	margin: 0 0 30px 0;
+	padding: 10px 0px;
+	font-size: 11px;
+}
+ul li a{
+	padding: 0 15px !important;
+	color: #ffffff;
+}
+.bienvenido{
+	float: right !important;
+	text-align: right;
+	padding-right: 30px;
+}
+.area_pantalla{
+        height: 75%;
+	overflow: auto;
+	background-color: #fff;
+	padding: 0 0 10px 0;
+        margin-top: -20px;
+        z-index: -100;
+}
+.cabecera_table{
+        margin: 10px 0 0 0 !important;
+}
+.contenido_cuentas{
+	-webkit-box-shadow: 2px 2px 15px 5px rgba(0,0,0,0.3);
+	box-shadow: 2px 2px 15px 5px rgba(0,0,0,0.3);
+	margin: 10px auto;
+	padding: 10px 20px;
+	border-radius: 10px;
+}
+.codigo_cuenta{
+	display: inline-block;
+	width: 300px;
+	float: left;
+}
+.nombres_cuentas{
+	display: inline-block;
+	width: 400px;
+	margin-left: 100px;
+}
+.titulo_ventana{
+	border-bottom: 1.5px solid #3a5795;
+	padding-bottom: 5px;
+}
+.cuentas{
+	height: 80%;
+	overflow-y: scroll;
+}
+
+.resaltar{
+    background-color:#3a5795 !important;
+    color: white;
+}
+/*** EXPORTAR EXCEL - PDF ***/
+#exportar-excel, #exportar-pdf{
+    display: inline-block !important;
+    margin-bottom: 0 !important;
+}
+/************ ASIENTOS DE DIARIO *************/
+.asientos_label{
+	display: inline-block;
+	width: 120px;
+}
+.asiento_descripcion{
+	width: 300px;
+}
+#registro_asiento{
+    margin-bottom: 0px !important;
+    display: inline-block
+}
+.fecha_diario{
+    padding: 0px 30px !important;
+}
+.div_descripcion{
+    padding: 0 !important;
+    margin-left: -15px !important;
+}
+#registro_asientos_diarios th, #tabla_asientos th{
+    font-size: 13px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+}
+#tabla_asientos td{
+    font-size: 13px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px;
+    vertical-align: middle;
+    padding: 3px 8px !important;
+}
+    
+#registro_asientos_diarios td{
+    padding: 0 !important;
+}
+.campo_total{
+    border: 1px solid #ccc;
+    padding-right: 10px !important;
+}
+#registro_asientos_diarios tfoot td{
+    font-size: 12px !important;
+    border-radius: 4px;
+    padding: 0px !important;
+    font-weight: bold !important;
+    text-align: right;
+}
+.valor{
+    padding: 3px 5px 3px 3px !important;
+    font-size: 11px !important;
+    height: auto !important;
+    text-align: right;
+}
+.campo_txt{
+    padding: 3px 3px !important;
+    font-size: 11px !important;
+    height: auto !important;
+}
+.selectpicker{
+    padding: 3px 3px !important;
+    font-size: 11px !important;
+    height: auto !important;
+}
+.simbolo_dolar{
+    display: inline-block;
+    width: 8%;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+.dinero{
+    display: inline-block;
+    width: 86%;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+}
+.bs-searchbox, .bs-actionsbox{
+    width: 285px;
+}
+
+/************ MAYOR CONTABLE *************/
+.parametros{
+    background: #f6f8f9;
+    background: -moz-linear-gradient(top, #f6f8f9 0%, #f5f7f9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(100%,#f5f7f9));
+    background: -webkit-linear-gradient(top, #f6f8f9 0%,#f5f7f9 100%);
+    background: -o-linear-gradient(top, #f6f8f9 0%,#f5f7f9 100%);
+    background: -ms-linear-gradient(top, #f6f8f9 0%,#f5f7f9 100%);
+    background: linear-gradient(to bottom, #f6f8f9 0%,#f5f7f9 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 );
+    border: 1px solid lightgray;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    margin: 15px auto 0 auto;
+    padding: 10px 20px;
+}
+.titulo_parametros{
+    text-align: center;
+}
+#agregar{
+    z-index: 1000
+}

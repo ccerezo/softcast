@@ -1,0 +1,131 @@
+#banco_diario .dropdown-toggle{
+    
+    height:20px;
+}
+ div.DTTT { margin-bottom: 0.5em; float: right; }
+    div.dataTables_wrapper { clear: both; }
+#loginForm .selectContainer .form-control-feedback {
+    /* Adjust feedback icon position */
+    right: -15px;
+}
+
+fieldset.group-border {
+    border: 1px solid #ddd !important;
+    border-radius: 3px;
+    padding: 0.4em 1.4em 0.2em 1.4em !important;
+    margin: 0 0 1.1em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+            box-shadow:  0px 0px 0px 0px #000;
+              
+}
+
+#banco_diario_filter, #banco_diario_info { display: none; }
+/** PARA HACER EL FORMULARIO MAS PEQUEÑO*/
+.input-sm{
+    
+    height: 22px;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.form-horizontal .control-label{
+    padding-top:0px;
+      margin-bottom: 0px;
+  text-align: right;
+}
+
+#banco_diario tbody td{
+    
+      border-top: 1px solid #dddddd;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left:0px;
+  padding-right:0px;
+}
+#banco_diario tbody td .bootstrap-select{
+    
+     
+  padding-top: 0px;
+
+}
+.dropdown-toggle{
+    height:25px;
+      padding-top: 0px;
+  padding-bottom: 0px;
+}
+.modal-header{
+      padding-top: 5px;
+  padding-bottom: 2px;
+}
+.area_pantalla{
+        overflow-x:hidden;
+    }
+    #example th {
+  font-size: 13px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px;
+    padding: 5px 10px;
+  border-bottom: 1px solid #111;
+}
+#example td {
+  font-size: 13px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px;
+  vertical-align: middle;
+
+    padding: 3px 8px;
+  border-bottom: 1px solid #111;
+}
+#example_length{
+    display:none;
+}
+table.dataTable.no-footer {
+   border-bottom: none; 
+}
+.table-bordered {
+   border:none; 
+}
+#example_filter{
+  float: left;
+  text-align: left;
+  margin-left: -25%;
+  margin-top: -40px;
+}
+.modal-footer{
+    padding-bottom:0px;
+}
+.modal-body{
+    padding-bottom:0px;
+}
+   #banco_diario th {
+  font-size: 13px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px;
+    padding: 5px 10px;
+  border-bottom: 1px solid #111;
+}
+#banco_diario td {
+  font-size: 13px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px;
+  vertical-align: middle;
+
+    padding: 3px 8px;
+  border-bottom: 1px solid #111;
+}
+.selectpicker {
+  padding: 3px 3px !important;
+  font-size: 11px !important;
+  height: auto !important;
+}
+.dropdown-submenu{position:relative;}
+.dropdown-submenu>.dropdown-menu{top:0;left:100%;margin-top:-6px;margin-left:-1px;-webkit-border-radius:0 6px 6px 6px;-moz-border-radius:0 6px 6px 6px;border-radius:0 6px 6px 6px;}
+.dropdown-submenu:hover>.dropdown-menu{display:block;}
+.dropdown-submenu>a:after{display:block;content:" ";float:right;width:0;height:0;border-color:transparent;border-style:solid;border-width:5px 0 5px 5px;border-left-color:#cccccc;margin-top:5px;margin-right:-10px;}
+.dropdown-submenu:hover>a:after{border-left-color:#ffffff;}
+.dropdown-submenu.pull-left{float:none;}.dropdown-submenu.pull-left>.dropdown-menu{left:-100%;margin-left:10px;-webkit-border-radius:6px 0 6px 6px;-moz-border-radius:6px 0 6px 6px;border-radius:6px 0 6px 6px;}
+
+.bs-searchbox, .bs-actionsbox{
+    width: 285px;
+}

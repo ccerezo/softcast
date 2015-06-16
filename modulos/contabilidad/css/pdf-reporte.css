@@ -1,0 +1,18 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11/03/2015, 13:04:45
+    Author     : Carlos
+*/
+h3{
+    border-bottom: 1px solid black;
+}
+table{
+    width: 90%;
+    margin: 0 auto;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
