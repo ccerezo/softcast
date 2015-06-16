@@ -1,22 +1,22 @@
 
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Sistema SOFTCAST</title>
+    <head>
+	<title>Sistema SOFTCAST</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     	<meta name="viewport" content="width=device-width, initial-scale=1" />
     	
     	<link rel="stylesheet" href="css/bootstrap.css" />
     	<link rel="stylesheet" href="css/bootstrap.min.css" />
-		<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/style.css" />
 
-		<script src="js/jquery-1.9.1.js"></script>
-		<script src="js/jquery.validate.js"></script>
-		<script src="js/bootstrap.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/login.js"></script>
+	<script src="js/jquery-1.9.1.js"></script>
+	<script src="js/jquery.validate.js"></script>
+	<script src="js/bootstrap.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/login.js"></script>
 
-	</head>
+    </head>
 	<body>
 		<section class="container-fluid cabecera_oculta"></section>
 		<section class="container-fluid cabecera bienvenido">Bienvenido al Sistema SOFTCAST</section>
