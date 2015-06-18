@@ -13,7 +13,7 @@
             ad.cont_descripcion descripcion_asiento, ad.cont_valor_total, dad.cont_detalle_descripcion descripcion_detalle, 
             dad.cont_valor valor_detalle, dad.cont_tipo tipo_detalle, pc.cont_nombre nombre_cuenta, pc.cont_codigo codigo_cuenta
             from cont_asientos_diarios ad 
-            inner join cont_detalle_asiento_diario dad on ad.cont_id_asientos = dad.cont_id_asiento_diario 
+            inner join cont_detalle_asiento_diario dad on ad.cont_numero_asiento = dad.cont_num_asiento_detalle 
             inner join cont_plan_de_cuentas pc on dad.cont_id_codigo_cuenta = pc.cont_id_cuenta
             where ad.cont_id_asientos='$id'";
     

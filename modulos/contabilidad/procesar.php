@@ -189,8 +189,8 @@
                 $id_asiento = mysqli_insert_id($link);
                 
                 for($i = 0; $i < count($codigo); $i++){
-                    $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_id_asiento_diario, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
-                    $sql1 .= "VALUES ($id_asiento, $codigo[$i], '$descripcion_detalle[$i]', $valor[$i], '$tipo[$i]')"; 
+                    $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_num_asiento_detalle, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
+                    $sql1 .= "VALUES ('$numero', $codigo[$i], '$descripcion_detalle[$i]', $valor[$i], '$tipo[$i]')"; 
                     $result = $link->query($sql1);
                     if(!$result){
                         echo "fallo";//;"Error en la Transacción 2: ".$link->error;

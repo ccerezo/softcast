@@ -173,7 +173,6 @@ $(document).ready(function(){
     });
     $("#registro_asiento").submit(function(){
         var datos = JSON.stringify($( "#registro_asiento" ).serializeArray());
-        console.log( datos );
         var num_diario = $('#numero_diario').val();
         var total_debe = $("#total_debe").maskMoney('unmasked')[0];
         var total_haber = $("#total_haber").maskMoney('unmasked')[0];
@@ -258,7 +257,8 @@ function setEvents(){
         success: function(data){
             var nuevaFila='';
             if(data==='vacio'){
-                $("#numero_diario").val(1);
+                //$("#numero_diario").val(1);
+                cambiar_numero_asiento();
             }else{
                 var response = JSON.parse(data);
                 $("#tabla_asientos tbody").remove();
@@ -298,9 +298,9 @@ function setEvents(){
                 "pageLength": 15,
                 "order": [[ 0, "desc" ]],
                 "aoColumns": [
-                    { sWidth: '9%' },
+                    { sWidth: '11%' },
                     { sWidth: '8%' },
-                    { sWidth: '67%' },
+                    { sWidth: '65%' },
                     { sWidth: '10%' },
                     { sWidth: '6%' }]
             }); 
@@ -384,9 +384,9 @@ function cambiar_numero_asiento(){
         texto = texto+"-0000";
         aux3 = "0000";
     }else{
-        aux1 = $("#numero_diario").val().substring(0,7);
+        aux1 = $("#numero_diario").val().substring(3,10);
         texto = texto.replace(aux1, aux2);
-        aux3 = $("#numero_diario").val().substring(8,12);
+        aux3 = $("#numero_diario").val().substring(11,15);
     }   
         $.ajax({
             url: "procesar.php",
@@ -397,20 +397,26 @@ function cambiar_numero_asiento(){
             },
             success: function (data) {
                 if(data!=='0'){
-                    var caracteres = parseInt(data.substring(8,12));
+                    var caracteres = parseInt(data.substring(11,15));
                     caracteres = (""+caracteres).length;
-                    var numero = parseInt(data.substring(8,12)) +1;
+                    var numero = parseInt(data.substring(11,15)) +1;
                     var aux4 = crear_numero_asiento(caracteres, numero);
                     
                     if(aux3!==aux4){
                         texto=texto.replace(aux3, aux4);
-                        $("#numero_diario").val(texto);
+                        if(texto.length===15)
+                            $("#numero_diario").val(texto);
+                        else
+                            $("#numero_diario").val("AD-"+texto);
                     }
                 }else{
                     texto=texto.replace(aux3, "0001");
-                    $("#numero_diario").val(texto);
+                    if(texto.length===15)
+                        $("#numero_diario").val(texto);
+                    else
+                        $("#numero_diario").val("AD-"+texto);
                 }
                 
             }
-        })
+        });
 }

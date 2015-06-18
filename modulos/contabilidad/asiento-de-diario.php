@@ -1,4 +1,4 @@
-﻿<?php 
+<?php 
 	include('../../conexion.php');
 	// Realizar una consulta MySQL
 
