@@ -223,8 +223,8 @@ $("#"+val).on('change', function(){
                         console.log(response);
                   
                         bootbox.alert({
-                            title: "Información",
-                            message: "El depósito se agregó Correctamente! ",
+                            title: "Informaciï¿½n",
+                            message: "El depï¿½sito se agregï¿½ Correctamente! ",
                             buttons: {
                                 'ok': {
                                     label: 'Aceptar',
@@ -243,8 +243,8 @@ $("#"+val).on('change', function(){
                         });
                     }else{
                         bootbox.alert({
-                            title: "Información",
-                            message: "El depósito no se agregó Revise los datos y vuelva a intentar!",
+                            title: "Informaciï¿½n",
+                            message: "El depï¿½sito no se agregï¿½ Revise los datos y vuelva a intentar!",
                             buttons: {
                                 'ok': {
                                     label: 'Aceptar',
@@ -397,7 +397,7 @@ $('input[name=haber_'+counter+']').prop('disabled', false);
      
      
 
-/** El datepicker lo escribe en idioma español*/
+/** El datepicker lo escribe en idioma espaï¿½ol*/
  $.datepicker.regional['es'] = {
  closeText: 'Cerrar',
  prevText: '<Ant',
@@ -405,8 +405,8 @@ $('input[name=haber_'+counter+']').prop('disabled', false);
  currentText: 'Hoy',
  monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
  monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
- dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Ssbado'],
- dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sab'],
+ dayNames: ['Domingo', 'Lunes', 'Martes', 'Miï¿½rcoles', 'Jueves', 'Viernes', 'Ssbado'],
+ dayNamesShort: ['Dom','Lun','Mar','Miï¿½','Juv','Vie','Sab'],
  dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
  weekHeader: 'Sm',
  dateFormat: 'yy-mm-dd',
@@ -587,8 +587,8 @@ $("#filas_diario").val(array_escritos);
     var x = screen.width/2 - (w/2);
     var y = screen.height/2 - (h/2);
     
-    var WindowObject = window.open(url,"Reporte Depósito","width="+w+",height="+h+",scrollbars=yes,top="+y+", left="+x+"") 
-    WindowObject.document.title = "Reporte Depósito";
+    var WindowObject = window.open(url,"Reporte Depï¿½sito","width="+w+",height="+h+",scrollbars=yes,top="+y+", left="+x+"") 
+    WindowObject.document.title = "Reporte Depï¿½sito";
 }
             function unmaskdebe(campo){
                 

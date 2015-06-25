@@ -144,7 +144,7 @@ ban_tipo=VALUES(ban_tipo)";
        
           
               $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
-                //Inicio de transacción
+                //Inicio de transacciï¿½n
                 $link->query("BEGIN;");
                 
                 $sql = "INSERT INTO ban_deposito_bancario (dep_numdeposito, dep_bancoid, dep_clienteid, dep_descripcion,dep_fecha,dep_numtransaccion,dep_valor) ";
@@ -152,7 +152,7 @@ ban_tipo=VALUES(ban_tipo)";
                 $result = $link->query($sql);
 
                 if(!$result){
-                    echo "fallo";//"Error en la Transacción 1: ".$link->error;
+                    echo "fallo";//"Error en la Transacciï¿½n 1: ".$link->error;
                     $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
                     exit();
                 }
@@ -160,12 +160,12 @@ ban_tipo=VALUES(ban_tipo)";
               $id_diario = mysqli_insert_id($link);
                 
                 for($i = 0; $i < count($cuenta); $i++){
-                    $sql1 = "INSERT INTO ban_banco_diario(bandia_diario, bandia_id_codigo_cuenta, bandia_detalle_descripcion, bandia_valor, bandia_tipo)";
-                    $sql1 .= "values ('$deposito', '$cuenta[$i]', '$descripcion_cuenta[$i]', '$valor[$i]', '$tipo[$i]')"; 
+                    $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_num_asiento_detalle, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
+                    $sql1 .= "VALUES ('$deposito', $cuenta[$i], '$descripcion_cuenta[$i]', $valor[$i], '$tipo[$i]')"; 
                     $result = $link->query($sql1);
                     if(!$result){
-                        echo "fallo";
-                        $link->query("ROLLBACK;");    
+                        echo "fallo";//;"Error en la TransacciÃ³n 2: ".$link->error;
+                        $link->query("ROLLBACK;");    //Terminar la transaccion si hay error
                         exit();
                     }
                 }
@@ -248,7 +248,7 @@ ban_tipo=VALUES(ban_tipo)";
        
           
               $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
-                //Inicio de transacción
+                //Inicio de transacciï¿½n
                 $link->query("BEGIN;");
                 
                 $sql = "INSERT INTO ban_egreso_bancario (egre_numegreso, egre_bancoid, egre_proveedorid, egre_descripcion,egre_fecha,egre_chequeid,egre_valor) ";
@@ -256,7 +256,7 @@ ban_tipo=VALUES(ban_tipo)";
                 $result = $link->query($sql);
 
                 if(!$result){
-                    echo "fallo";//"Error en la Transacción 1: ".$link->error;
+                    echo "fallo";//"Error en la Transacciï¿½n 1: ".$link->error;
                     $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
                     exit();
                 }
@@ -376,7 +376,7 @@ ban_tipo=VALUES(ban_tipo)";
        
           
               $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
-                //Inicio de transacción
+                //Inicio de transacciï¿½n
                 $link->query("BEGIN;");
                 
                 $sql = "INSERT INTO ban_deposito_bancario (dep_numdeposito, dep_bancoid, dep_clienteid, dep_descripcion,dep_fecha,dep_numtransaccion,dep_valor) ";
@@ -384,7 +384,7 @@ ban_tipo=VALUES(ban_tipo)";
                 $result = $link->query($sql);
 
                 if(!$result){
-                    echo "fallo";//"Error en la Transacción 1: ".$link->error;
+                    echo "fallo";//"Error en la Transacciï¿½n 1: ".$link->error;
                     $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
                     exit();
                 }
