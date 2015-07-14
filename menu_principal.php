@@ -51,12 +51,12 @@
                               <li class="dropdown-submenu">
                                 <a tabindex="-1" href="#">Movimientos Bancarios</a>
                                 <ul class="dropdown-menu">
-                                  <li><a tabindex="-1" href="<?php echo $servidor; ?>/modulos/bancos/deposito_bancario.php">Dep&oacute;sitos</a></li>
+                                  <li><a tabindex="-1" href="<?php echo $servidor; ?>/modulos/bancos/deposito-bancario.php">Dep&oacute;sitos</a></li>
 
-                                  <li><a href="<?php echo $servidor; ?>/modulos/bancos/egreso_bancario.php">Egreso Bancario</a></li>
+                                  <li><a href="<?php echo $servidor; ?>/modulos/bancos/egreso-bancario.php">Egreso Bancario</a></li>
                                   <li><a href="#">Transferencias</a></li>
-                                  <li><a href="#">Notas de Débito</a></li>
-                                  <li><a href="#">Notas de Cr&eacute;dito</a></li>
+                                  <li><a href="<?php echo $servidor; ?>/modulos/bancos/notas-debito.php">Notas de Débito</a></li>
+                                  <li><a href="<?php echo $servidor; ?>/modulos/bancos/notas-credito.php">Notas de Cr&eacute;dito</a></li>
                                 </ul>
                               </li>
                               <li class="divider"></li>

@@ -108,7 +108,7 @@
         break;
     
         case 'consultar_asientos':
-            $query = "SELECT * FROM cont_asientos_diarios";
+            $query = "SELECT * FROM cont_asientos_diarios WHERE cont_estado='activo'";
             $result = $link->query($query);
             $num_registros = $result->num_rows;
             if($num_registros > 0){
@@ -138,87 +138,78 @@
             }
         break;
         
+        case 'consultar_cuentas_contables_bancos':
+            $query = "SELECT * FROM cont_plan_de_cuentas WHERE cont_codigo like '1.1.01.02%' AND cont_catogoria = 'C'";
+            $result = $link->query($query);
+            $num_registros = $result->num_rows;
+            if($num_registros > 0){
+                while($row = $result->fetch_assoc()){
+                    $cuentas_contables[] = array('id_cuenta' => $row['cont_id_cuenta'],'codigo' => $row['cont_codigo'], 'nombre' => utf8_encode($row['cont_nombre']));
+                }
+                echo json_encode($cuentas_contables);
+            }
+        break;
+        
         case 'ingresar_asiento_diario':
-            if(isset($_REQUEST['numero'])){
-                $numero = $_REQUEST['numero'];
-            }
-            if(isset($_REQUEST['total'])){
-                $total = $_REQUEST['total'];
-            }
+            
+            if(isset($_REQUEST['numero'])){$numero = $_REQUEST['numero'];}
+            if(isset($_REQUEST['descripcion'])){$descripcion = utf8_decode($_REQUEST['descripcion']);}
+            if(isset($_REQUEST['fecha'])){$fecha = $_REQUEST['fecha'];}
+            if(isset($_REQUEST['total'])){$total = $_REQUEST['total'];}
             if(isset($_REQUEST['datos'])){
                 $parametros = json_decode($_REQUEST['datos'],true);
+            }    
                 
-                $i=0;
-                foreach($parametros as $array){
-                    if($i==0){
-                        $fecha = $array["value"];
-                    }
-                        
-                    if($i==1)
-                        $descripcion = utf8_decode($array["value"]);
-                    if($i==2 && $array["value"]!=NULL)
-                        $codigo[] = $array["value"];
-                    if($i==3 && $array["value"]!=NULL)
-                        $nombre[] = $array["value"];
-                    if($i==4 && $array["value"]!=NULL)
-                        $descripcion_detalle[] = utf8_decode($array["value"]);
-                    if($i==5 && $array["value"]!=NULL){
-                        $valor[] = str_replace(",","",$array["value"]);
-                        $tipo[] = substr($array["name"],0,1);
-                    }
-                        
-                    if($i === 5)
-                        $i=2;
-                    else
-                        $i++;
-                }
-                $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
-                //Inicio de transacción
-                $link->query("BEGIN;");
-                
-                $sql = "INSERT INTO cont_asientos_diarios (cont_numero_asiento, cont_fecha, cont_descripcion, cont_valor_total) ";
-                $sql .= "values ('$numero', '$fecha', '$descripcion', $total)";
-                $result = $link->query($sql);
+            $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
+            //Inicio de transacción
+            $link->query("BEGIN;");
 
+            $sql = "INSERT INTO cont_asientos_diarios (cont_numero_asiento, cont_fecha, cont_descripcion, cont_valor_total) ";
+            $sql .= "values ('$numero', '$fecha', '$descripcion', $total)";
+            $result = $link->query($sql);
+
+            if(!$result){
+                echo "fallo";//"Error en la Transacción 1: ".$link->error;
+                $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
+                exit();
+            }
+
+            $id_asiento = mysqli_insert_id($link);
+                
+            for($i = 0; $i < count($parametros); $i++){
+                $id_producto = $parametros[$i]["producto"];
+                $descripcion_detalle = $parametros[$i]["descripcion_detalle"];
+                $valor_detalle = $parametros[$i]["valor_detalle"];
+                $tipo = $parametros[$i]["tipo_detalle"];
+                $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_num_asiento_detalle, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
+                $sql1 .= "VALUES ('$numero', '$id_producto', '$descripcion_detalle', $valor_detalle, '$tipo')"; 
+                $result = $link->query($sql1);
                 if(!$result){
-                    echo "fallo";//"Error en la Transacción 1: ".$link->error;
-                    $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
+                    echo "fallo";// Error en la Transacción 2: ".$link->error;
+                    $link->query("ROLLBACK;");    //Terminar la transaccion si hay error
                     exit();
                 }
-        
-                $id_asiento = mysqli_insert_id($link);
-                
-                for($i = 0; $i < count($codigo); $i++){
-                    $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_num_asiento_detalle, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
-                    $sql1 .= "VALUES ('$numero', $codigo[$i], '$descripcion_detalle[$i]', $valor[$i], '$tipo[$i]')"; 
-                    $result = $link->query($sql1);
-                    if(!$result){
-                        echo "fallo";//;"Error en la Transacción 2: ".$link->error;
-                        $link->query("ROLLBACK;");    //Terminar la transaccion si hay error
-                        exit();
-                    }
-                }
-
-                if ($result) {
-                    $link->query("COMMIT");      //Terminar la transaccion
-                    $query = "SELECT * FROM cont_asientos_diarios WHERE cont_id_asientos = '$id_asiento'";
-                    $result_in = $link->query($query);
-                    $num_registros = $result_in->num_rows;
-                    if($num_registros > 0){
-                        while($row = $result_in->fetch_assoc()){
-                            $asientos_contables[] = array(  'id_asiento' => $row['cont_id_asientos'],
-                                                            'num_asiento' => $row['cont_numero_asiento'],
-                                                            'fecha' => $row['cont_fecha'],
-                                                            'descripcion' => utf8_encode($row['cont_descripcion']),
-                                                            'valor' => $row['cont_valor_total']);
-                        }
-                        echo json_encode($asientos_contables);
-                    }else{
-                        echo "fallo";
-                    }
-                }  
-                $link->query("END;");  
             }
+
+            if($result) {
+                $link->query("COMMIT");      //Terminar la transaccion
+                $query = "SELECT * FROM cont_asientos_diarios WHERE cont_id_asientos = '$id_asiento'";
+                $result_in = $link->query($query);
+                $num_registros = $result_in->num_rows;
+                if($num_registros > 0){
+                    while($row = $result_in->fetch_assoc()){
+                        $asientos_contables[] = array(  'id_asiento' => $row['cont_id_asientos'],
+                                                        'num_asiento' => $row['cont_numero_asiento'],
+                                                        'fecha' => $row['cont_fecha'],
+                                                        'descripcion' => utf8_encode($row['cont_descripcion']),
+                                                        'valor' => $row['cont_valor_total']);
+                    }
+                    echo json_encode($asientos_contables);
+                }else{
+                    echo "fallo";
+                }
+            }  
+            $link->query("END;");  
                 
         break;
 

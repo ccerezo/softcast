@@ -9,63 +9,48 @@
     include('../../conexion.php');
     include('../../redireccionar.php');
     $id = $_GET['id'];
-     
-   /*  $query = "select dep.*, dia.*,ban.*,cli.*,plan.* from ban_deposito_bancario dep 
-            inner join ban_banco_diario dia on dep.dep_id= dia.bandia_diario 
-            inner join banco ban on dep.dep_bancoid = ban.ban_id
-            inner join cliente cli on dep.dep_clienteid=cli.id
-            inner join cont_plan_de_cuentas plan on dia.bandia_id_codigo_cuenta=plan.cont_id_cuenta
-            where dep.dep_id='$id'";
-            */
-         $query = "select egre.*, dia.*,ban.*,pro.*,plan.* from ban_egreso_bancario egre 
-            inner join cont_detalle_asiento_diario dia on egre.egre_numegreso= dia.cont_id_asiento_diario 
-            inner join banco ban on egre.egre_bancoid = ban.ban_id
-            inner join pag_maestro_proveedor pro on egre.egre_proveedorid=pro.ID
-            inner join cont_plan_de_cuentas plan on dia.cont_id_codigo_cuenta=plan.cont_id_cuenta
-            where egre.egre_id='$id'";
-      
-     $result = $link->query($query);
+    $query = "select de.dep_numdeposito numero, de.dep_fecha fecha, de.dep_descripcion descripcion, dad.cont_detalle_descripcion descripcion_detalle, 
+            dad.cont_valor valor_detalle, dad.cont_tipo tipo_detalle, pc.cont_nombre nombre_cuenta, pc.cont_codigo codigo_cuenta
+            from ban_deposito_bancario de 
+            inner join cont_detalle_asiento_diario dad on de.dep_numdeposito = dad.cont_num_asiento_detalle 
+            inner join cont_plan_de_cuentas pc on dad.cont_id_codigo_cuenta = pc.cont_id_cuenta
+            where de.dep_id='$id'";
+    
+    $result = $link->query($query);
     $num_registros = $result->num_rows;
     $total_debe = $total_haber = 0;
     
     if($num_registros > 0){
         while($row = $result->fetch_assoc()){
-            $egreso_numero = $row['egre_numegreso'];
-            $fecha = $row['egre_fecha'];
-            $descripcion = utf8_encode($row['egre_descripcion']);
-            $banco = utf8_encode($row['ban_nombre'].' '.$row['ban_tipo'].' '.$row['ban_numero_cuenta']);
-            $proveedor = utf8_encode($row['NOMBRE']);
-            $detalle_descripcion[] = utf8_encode($row['cont_detalle_descripcion']);
-            $detalle_valor[] = $row['cont_valor'];
-            $detalle_tipo[] = $row['cont_tipo'];
-            $cuenta_nombre[] = utf8_encode($row['cont_nombre']);
-            $cuenta_codigo[] = $row['cont_codigo'];
+            $numero = $row['numero'];
+            $fecha = $row['fecha'];
+            $descripcion = utf8_encode($row['descripcion']);
+            $detalle_descripcion[] = utf8_encode($row['descripcion_detalle']);
+            $detalle_valor[] = $row['valor_detalle'];
+            $detalle_tipo[] = $row['tipo_detalle'];
+            $cuenta_nombre[] = utf8_encode($row['nombre_cuenta']);
+            $cuenta_codigo[] = $row['codigo_cuenta'];
         }
     }
         
 $html='';
 $html.='<html>
 	<head>
-            <title>Contabilidad - Asiento de Diario</title>
+            <title>Bancos - DepÃ³sitos Bancarios</title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <link rel="stylesheet" href="css/reporte-diario.css" />
 	</head>
 	<body>
             
-            <h3 class="titulo">Egreso N° '.$egreso_numero.'</h3>
-            <h3 class="titulo">Egreso N° '.$egreso_numero.'</h3>
-            <p style="text-align:right"><span class="labels">Fecha:</span><span class="dato">'.$fecha.'</span></p>
-            <p><span class="labels">Descripción:</span><span class="dato">'.$descripcion.'</span></p>
-            <p><span class="labels">Banco:</span><span class="dato">'.$banco.'</span></p>
-           
-            <p><span class="labels">Proveedor:</span><span class="dato">'.$proveedor.'</span></p>
-            
+            <h3 class="titulo">Comprobante de DepÃ³sito NÂ° '.$numero.'</h3>
+            <p><span class="labels">Fecha:</span><span class="dato">'.$fecha.'</span></p>
+            <p><span class="labels">DescripciÃ³n:</span><span class="dato">'.$descripcion.'</span></p>
             <table>
                 <thead>
                 <tr>
-                    <th style="width:12%;">Código Cta.</th>
+                    <th style="width:12%;">CÃ³digo Cta.</th>
                     <th style="width:20%;">Nombre Cta.</th>
-                    <th style="width:46%;">Descripción</th>
+                    <th style="width:46%;">DescripciÃ³n</th>
                     <th style="width:11%;">Debe</th>
                     <th style="width:11%;">Haber</th>
                 </tr>
@@ -115,9 +100,8 @@ require_once("../../../dyansoft/dompdf/dompdf_config.inc.php");
     //$pdf->set_paper(DEFAULT_PDF_PAPER_SIZE, 'a4');
     ini_set("memory_limit","32M");
     $pdf -> render();
-   header('Content-type: application/pdf'); //ponemos la cabecera para PDF
-   
-    echo $pdf->output('Asiento Diario.pdf'); //Y con ésto se manda a imprimir el contenido del pdf
+    header('Content-type: application/pdf'); //ponemos la cabecera para PDF
+    echo $pdf->output('Asiento Diario.pdf'); //Y con Ã©sto se manda a imprimir el contenido del pdf
     //$pdf -> stream('Asiento Diario.pdf');
     
 
