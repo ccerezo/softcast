@@ -75,27 +75,27 @@ $(document).ready(function(){
     });
     
     /**************************************************************************/
-    /****************** CARGAR SELECT CON LOS PROVEEDORES *********************/
+    /******************** CARGAR SELECT CON LOS CLIENTES **********************/
     /**************************************************************************/
     $.ajax({
         url: "procesar.php",
         type: "POST",
         data:{
-            orden: "consultar_proveedores"
+            orden: "consultar_clientes"
         },
         success: function(data){
             var response = JSON.parse(data);
-            $('.selectpicker_proveedor option').remove();
-            $('.selectpicker_proveedor').append($('<option value="" data-nombre=""></option>').attr("selected", "selected").text('Buscar Proveedor')); 
+            $('.selectpicker_cliente option').remove();
+            $('.selectpicker_cliente').append($('<option value="" data-nombre=""></option>').attr("selected", "selected").text('Buscar cliente')); 
             for (var i=0; i < response.length; i++){
-                $(".selectpicker_proveedor").append("<option value="+response[i]['id_proveedor']+" title='"+response[i]["identificacion"]+"' data-nombre='"+response[i]["nombre"]+"' data-codigo='"+response[i]["codigo"]+"' data-telefono='"+response[i]["telefono"]+"' >"+response[i]["identificacion"]+" - "+response[i]["nombre"]+"</option>");
+                $(".selectpicker_cliente").append("<option value="+response[i]['id_cliente']+" title='"+response[i]["identificacion"]+"' data-nombre='"+response[i]["nombre"]+"' data-direccion='"+response[i]["direccion"]+"' data-telefono='"+response[i]["telefono"]+"' >"+response[i]["identificacion"]+" - "+response[i]["nombre"]+"</option>");
             } 
         },complete: function(){
             // añade un script a la página y luego ejecuta la función especificada
             $.getScript('../../js/bootstrap-select.js', function() {
-                $('.selectpicker_proveedor').selectpicker({
+                $('.selectpicker_cliente').selectpicker({
                     width: '135px',
-                    noneResultsText: 'Proveedor No registrado',
+                    noneResultsText: 'Cliente No registrado',
                     title: 'Codigo'
                 });
 
@@ -132,24 +132,24 @@ $(document).ready(function(){
         }   
     });
     /**************************************************************************/
-    /*********** LLENAR DATOS DEL FORMULARIO DATOS DE UN PROVEEDOR ************/
+    /************ LLENAR DATOS DEL FORMULARIO DATOS DE UN CLIENTE *************/
     /**************************************************************************/
-    $('.selectpicker_proveedor').on('change', function(){
+    $('.selectpicker_cliente').on('change', function(){
         
         selectedOption = $('option:selected', this);
         
         if(selectedOption.data('nombre')===''){
-            $('#nombre_proveedor').val('');
-            $('#codigo_proveedor').val('');
-            $('#telefono_proveedor').val('');
+            $('#nombre_cliente').val('');
+            $('#direccion').val('');
+            $('#telefono').val('');
         }else{
-            $("#id_proveedor").val($(this).val());
+            $("#id_cliente").val($(this).val());
             var nombre = selectedOption.data('nombre');
-            $('#nombre_proveedor').val(nombre); 
-            var direccion = selectedOption.data('codigo');
-            $('#codigo_proveedor').val(direccion); 
+            $('#nombre_cliente').val(nombre); 
+            var direccion = selectedOption.data('direccion');
+            $('#direccion_cliente').val(direccion); 
             var telefono = selectedOption.data('telefono');
-            $('#telefono_proveedor').val(telefono); 
+            $('#telefono_cliente').val(telefono); 
 
         }
             
@@ -323,7 +323,7 @@ $(document).ready(function(){
     $("#form_registro_bancario").submit(function(){
         var num_diario = $('#numero_diario').text();
         var banco = $('#id_banco').val();
-        var proveedor = $('#id_proveedor').val();
+        var cliente = $('#id_cliente').val();
         var descripcion = $('#descripcion_bancaria').val();
         var fecha = $('#fecha_asiento').val();
         var total_debe = $("#total_debe").maskMoney('unmasked')[0];
@@ -337,11 +337,11 @@ $(document).ready(function(){
                 url: "procesar.php",
                 type: "post",
                 data: {
-                    orden: "ingresar_te",
+                    orden: "ingresar_tr",
                     numero: num_diario,
                     descripcion: descripcion,
                     banco: banco,
-                    proveedor: proveedor,
+                    cliente: cliente,
                     fecha: fecha,
                     total: total,
                     datos: detalle_asiento_diario
@@ -369,7 +369,7 @@ $(document).ready(function(){
                                 $("input").attr('disabled', true);
                                 $("textarea").attr('disabled', true);
                                 $(".selectpicker").attr('disabled', true);
-                                $("#identificador_bancario").val(response[0]["id_te"]);
+                                $("#identificador_bancario").val(response[0]["id_tr"]);
                                 //location.reload();
                             }
                         });
@@ -407,7 +407,7 @@ function setEvents(){
         url: "procesar.php",
         type: "POST",
         data:{
-            orden: "consultar_te"
+            orden: "consultar_tr"
         },
         success: function(data){
             var nuevaFila='';
@@ -416,28 +416,28 @@ function setEvents(){
                 cambiar_numero();
             }else{
                 var response = JSON.parse(data);
-                $("#tabla_te tbody").remove();
+                $("#tabla_tr tbody").remove();
                 nuevaFila+="<tbody>";
                 for(var i=0; i<response.length; i++){
-                    nuevaFila+="<tr id='depositos"+response[i]["id_te"]+"'>"; 
-                    nuevaFila+="<td>"+response[i]["numero"]+"</td>";
+                    nuevaFila+="<tr id='depositos"+response[i]["id_tr"]+"'>"; 
+                    nuevaFila+="<td>"+response[i]["num_tr"]+"</td>";
                     nuevaFila+="<td>"+response[i]["fecha"]+"</td>";
                     nuevaFila+="<td>"+response[i]["nombre_banco"]+"</td>";
                     nuevaFila+="<td>"+response[i]["num_cuenta_banco"]+"</td>";
                     nuevaFila+="<td>"+response[i]["tipo_cuenta_banco"]+"</td>";
                     nuevaFila+="<td>"+response[i]["descripcion"]+"</td>";
                     nuevaFila+="<td><span class='simbolo_dolar'>$</span> <span class='dinero'>"+response[i]["valor"]+"</span></td>";
-                    nuevaFila+="<td><a style='cursor:pointer;' onclick='ver("+response[i]["id_te"]+")' title='Ver'><span class='glyphicon glyphicon-zoom-in'></span></a>\n\
-                                    <a style='cursor:pointer;' onclick='eliminar("+response[i]["id_te"]+")' title='Eliminar'><span class='glyphicon glyphicon-trash'></span></a>\n\
-                                    <a style='cursor:pointer;' onclick='editar("+response[i]["id_te"]+")' title='Editar'><span class='glyphicon glyphicon-pencil'></span></a></td>";
+                    nuevaFila+="<td><a style='cursor:pointer;' onclick='ver("+response[i]["id_tr"]+")' title='Ver'><span class='glyphicon glyphicon-zoom-in'></span></a>\n\
+                                    <a style='cursor:pointer;' onclick='eliminar("+response[i]["id_tr"]+")' title='Eliminar'><span class='glyphicon glyphicon-trash'></span></a>\n\
+                                    <a style='cursor:pointer;' onclick='editar("+response[i]["id_tr"]+")' title='Editar'><span class='glyphicon glyphicon-pencil'></span></a></td>";
                     nuevaFila+="</tr>";
                 }
                 nuevaFila+="</tbody>";
                 
-                $("#tabla_te").append(nuevaFila);
+                $("#tabla_tr").append(nuevaFila);
                 cambiar_numero();
             }
-            $('#tabla_te').DataTable({
+            $('#tabla_tr').DataTable({
                 "bLengthChange": false,
                 "responsive": true,
                 "language": {
@@ -553,7 +553,7 @@ function cambiar_numero(){
             url: "procesar.php",
             type: "post",
             data:{
-                orden: 'ultimo_diario_mes_trans_env',
+                orden: 'ultimo_diario_mes_trans_rec',
                 mes: aux2
             },
             success: function (data) {
@@ -568,14 +568,14 @@ function cambiar_numero(){
                         if(texto.length===15)
                             $("#numero_diario").text(texto);
                         else
-                            $("#numero_diario").text("TE-"+texto);
+                            $("#numero_diario").text("TR-"+texto);
                     }
                 }else{
                     texto=texto.replace(aux3, "0001");
                     if(texto.length===15)
                         $("#numero_diario").text(texto);
                     else
-                        $("#numero_diario").text("TE-"+texto);
+                        $("#numero_diario").text("TR-"+texto);
                 }
                 
             }

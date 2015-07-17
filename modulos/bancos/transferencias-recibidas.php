@@ -8,7 +8,7 @@
 ?>
 <html>
     <head>
-        <title>Bancos - Transferencias Enviadas</title>
+        <title>Bancos - Transferencias Recibidas</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -32,7 +32,7 @@
         <script src="../../js/bootbox.min.js"></script>
         <script src="../../js/fm.scrollator.jquery.js"></script>
         
-        <script src="js/transferencias-enviadas.js"></script>
+        <script src="js/transferencias-recibidas.js"></script>
         
     </head>
     <body>
@@ -46,13 +46,13 @@
 	<section class="container-fluid cabecera_oculta"></section>
 
             <section class="container contenido_cuentas">
-		<h4 class="titulo_ventana">Transferencias Enviadas</h4>
+		<h4 class="titulo_ventana">Transferencias Recibidas</h4>
                 <button type="button" class="btn btn-primary glyphicon glyphicon-file" id="agregar" data-id='nuevo1' data-toggle="modal" data-target="#myModal" title="Agregar"></button>
                 <div class="area_pantalla">
-		<table id="tabla_te" class="table table-bordered">
+		<table id="tabla_tr" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>T.E. N°</th>
+                            <th>T.R. N°</th>
                             <th>Fecha</th>
                             <th>Banco</th>
                             <th>Cuenta</th>
@@ -74,7 +74,7 @@
                     <form action="#" enctype="multipart/form-data" method="post" id="form_registro_bancario">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Transferencias Enviadas: <span id="numero_diario"></span></h4>
+                        <h4 class="modal-title">Transferencia Recibida: <span id="numero_diario"></span></h4>
                     </div>
                     <div class="modal-body">
                         <div id="seccion1">
@@ -116,35 +116,35 @@
                         <div id="panel_clientes" class="col-md-4">
                         <div class="panel panel-default mi_panel">
                             <div class="panel-heading">
-                                <h4 class="panel-title">Datos del Proveedor</h4>
+                                <h4 class="panel-title">Datos del Cliente</h4>
                             </div>
                             <div class="panel-body">
                                 <div class="form-group col-md-12">
                                     <label class="col-md-3">RUC/CI:</label>
                                     <div class="col-md-9">
-                                        <select id="selecciona_proveedor" name="selecciona_proveedor" class="selectpicker_proveedor" data-live-search="true"></select>
+                                        <select id="selecciona_cliente" name="selecciona_cliente" class="selectpicker_cliente" data-live-search="true"></select>
                                         <button type="button" class="btn btn-primary glyphicon glyphicon-plus btn-xs" data-id='nuevo1' data-toggle="modal" data-target="#myModal1" title="Agregar Cliente"></button>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label class="col-md-3">Nombre:</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control dato_cliente" id="nombre_proveedor" name="nombre_proveedor" required>
+                                        <input type="text" class="form-control dato_cliente" id="nombre_cliente" name="nombre_cliente" required>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
-                                    <label class="col-md-3">Código:</label>
+                                    <label class="col-md-3">Dirección:</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control dato_cliente" id="codigo_proveedor" name="codigo_proveedor" required>
+                                        <input type="text" class="form-control dato_cliente" id="direccion_cliente" name="direccion_cliente" required>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label class="col-md-3">Teléfono:</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control dato_cliente" id="telefono_proveedor" name="telefono_proveedor" required>
+                                        <input type="text" class="form-control dato_cliente" id="telefono_cliente" name="telefono_cliente" required>
                                     </div>
                                 </div>
-                                <input type="hidden" id="id_proveedor" value="">
+                                <input type="hidden" id="id_cliente" value="">
                             </div>
                         </div>
                         </div>
@@ -152,7 +152,7 @@
                         <div id="panel_desposito" class="col-md-4">
                         <div class="panel panel-default mi_panel">
                             <div class="panel-heading">
-                                <h4 class="panel-title">Datos de la Transferencia Enviada</h4>
+                                <h4 class="panel-title">Datos de la Transferencia Recibida</h4>
                             </div>
                             <div class="panel-body">
                                 

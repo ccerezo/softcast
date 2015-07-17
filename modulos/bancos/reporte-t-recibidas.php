@@ -9,54 +9,42 @@
     include('../../conexion.php');
     include('../../redireccionar.php');
     $id = $_GET['id'];
-   /* $query = "select ad.cont_numero_asiento numero_asiento, ad.cont_fecha fecha_asiento, 
-            ad.cont_descripcion descripcion_asiento, ad.cont_valor_total, dad.cont_detalle_descripcion descripcion_detalle, 
-            dad.cont_valor valor_detalle, dad.cont_tipo tipo_detalle, pc.cont_nombre nombre_cuenta, pc.cont_codigo codigo_cuenta
-            from cont_asientos_diarios ad 
-            inner join cont_detalle_asiento_diario dad on ad.cont_id_asientos = dad.cont_id_asiento_diario 
+    $query = "select tr.tra_rec_id id_tr, tr.tra_rec_numtransferencia numero, tr.tra_rec_descripcion descripcion, dad.cont_detalle_descripcion descripcion_detalle, 
+            tr.tra_rec_fecha fecha, dad.cont_valor valor_detalle, dad.cont_tipo tipo_detalle, pc.cont_nombre nombre_cuenta, pc.cont_codigo codigo_cuenta
+            from ban_transferencia_recibida tr 
+            inner join cont_detalle_asiento_diario dad on tr.tra_rec_numtransferencia = dad.cont_num_asiento_detalle 
             inner join cont_plan_de_cuentas pc on dad.cont_id_codigo_cuenta = pc.cont_id_cuenta
-            where ad.cont_id_asientos='$id'";*/
+            where tr.tra_rec_id='$id'";
     
-     $query = "select rec.*, dia.*,ban.*,cli.*,plan.* from ban_transferencia_recibida rec 
-            inner join cont_detalle_asiento_diario dia on rec.tra_rec_numtransferencia= dia.cont_id_asiento_diario 
-            inner join banco ban on rec.tra_rec_bancoid = ban.ban_id
-            inner join cliente cli on rec.tra_rec_clienteid=cli.id
-            inner join cont_plan_de_cuentas plan on dia.cont_id_codigo_cuenta=plan.cont_id_cuenta
-            where rec.tra_rec_id='$id'";
     $result = $link->query($query);
     $num_registros = $result->num_rows;
     $total_debe = $total_haber = 0;
     
     if($num_registros > 0){
         while($row = $result->fetch_assoc()){
-            $deposito_numero = $row['tra_rec_numtransferencia'];
-            $fecha = $row['tra_rec_fecha'];
-            $descripcion = utf8_encode($row['tra_rec_descripcion']);
-            $banco = utf8_encode($row['ban_nombre'].' '.$row['ban_tipo'].' '.$row['ban_numero_cuenta']);
-            $cliente = utf8_encode($row['nombre']);
-            $detalle_descripcion[] = utf8_encode($row['cont_detalle_descripcion']);
-            $detalle_valor[] = $row['cont_valor'];
-            $detalle_tipo[] = $row['cont_tipo'];
-            $cuenta_nombre[] = utf8_encode($row['cont_nombre']);
-            $cuenta_codigo[] = $row['cont_codigo'];
+            $numero = $row['numero'];
+            $fecha = $row['fecha'];
+            $descripcion = utf8_encode($row['descripcion']);
+            $detalle_descripcion[] = utf8_encode($row['descripcion_detalle']);
+            $detalle_valor[] = $row['valor_detalle'];
+            $detalle_tipo[] = $row['tipo_detalle'];
+            $cuenta_nombre[] = utf8_encode($row['nombre_cuenta']);
+            $cuenta_codigo[] = $row['codigo_cuenta'];
         }
     }
         
 $html='';
 $html.='<html>
 	<head>
-            <title>Contabilidad - Asiento de Diario</title>
+            <title>Bancos - Depósitos Bancarios</title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <link rel="stylesheet" href="css/reporte-diario.css" />
 	</head>
 	<body>
             
-            <h3 class="titulo">Transferencia Recibida N° '.$deposito_numero.'</h3>
-          
-            <p style="text-align:right"><span class="labels">Fecha:</span><span class="dato">'.$fecha.'</span></p>
+            <h3 class="titulo">Comprobante de Transferencia Recibida N° '.$numero.'</h3>
+            <p><span class="labels">Fecha:</span><span class="dato">'.$fecha.'</span></p>
             <p><span class="labels">Descripción:</span><span class="dato">'.$descripcion.'</span></p>
-            <p><span class="labels">Banco:</span><span class="dato">'.$banco.'</span></p>
-            <p><span class="labels">Cliente:</span><span class="dato">'.$cliente.'</span></p>
             <table>
                 <thead>
                 <tr>
@@ -112,10 +100,8 @@ require_once("../../../dyansoft/dompdf/dompdf_config.inc.php");
     //$pdf->set_paper(DEFAULT_PDF_PAPER_SIZE, 'a4');
     ini_set("memory_limit","32M");
     $pdf -> render();
-   header('Content-type: application/pdf'); //ponemos la cabecera para PDF
-   
-    echo $pdf->output('Asiento Diario.pdf'); //Y con ésto se manda a imprimir el contenido del pdf
-    //$pdf -> stream('Asiento Diario.pdf');
-    
+    header('Content-type: application/pdf'); //ponemos la cabecera para PDF
+    echo $pdf->output('Transferencias Recibidas.pdf'); //Y con ésto se manda a imprimir el contenido del pdf
+    //$pdf -> stream('Asiento Diario.pdf');*/  
 
 ?>

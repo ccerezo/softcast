@@ -476,215 +476,192 @@
         $link->query("END;");  
     break;
     
-    case 'ingresar_trans_recibida':
-
- if(isset($_REQUEST['filas'])){
-                $filas = $_REQUEST['filas'];
+    /**************************************************************************/
+    /***************** CONSULTAR TRANSFERENCIAS RECIBIDAS *********************/
+    /**************************************************************************/ 
+    case 'consultar_tr':
+        $query = "SELECT tr.tra_rec_id id_tr, tr.tra_rec_numtransferencia numtr, tr.tra_rec_descripcion tr_descripcion,
+                    tr.tra_rec_fecha tr_fecha, tr.tra_rec_valor tr_valor, b.ban_nombre ban_nombre, b.ban_numero_cuenta num_cuenta,
+                    b.ban_tipo tipo_cuenta
+                    FROM ban_transferencia_recibida tr
+                    INNER JOIN banco b ON b.ban_id = tr.tra_rec_bancoid
+                    WHERE tr.tra_rec_estado = 'activo'";
+        $result = $link->query($query);
+        $num_registros = $result->num_rows;
+        if($num_registros > 0){
+            while($row = $result->fetch_assoc()){
+                $tr_bancarios[] = array( 'id_tr' => $row['id_tr'],
+                                            'num_tr' => $row['numtr'],
+                                            'nombre_banco' => $row['ban_nombre'],
+                                            'num_cuenta_banco' => $row['num_cuenta'],
+                                            'tipo_cuenta_banco' => $row['tipo_cuenta'],
+                                            'descripcion' => utf8_encode($row['tr_descripcion']),
+                                            'fecha' => $row['tr_fecha'],
+                                            'valor' => $row['tr_valor']);
             }
-   
-     if(isset($_REQUEST['datos'])){
-                $parametros = json_decode($_REQUEST['datos'],true);
-                
-                $i=0;
-                foreach($parametros as $array){
-                    if($i==0){
-                        $recibida = $array["value"];
-                    }
-                        
-                    if($i==1)
-                        $fecha = utf8_decode($array["value"]);
-                        if($i==2)
-                        $banco_id = utf8_decode($array["value"]);
-                       
-                    if($i==3)
-                        $valor_recibido= utf8_decode($array["value"]);
-                      if($i==4)
-                        $valor_recibido_unmask = utf8_decode($array["value"]);
-                     
-                    if($i==5)
-                        $nom_cliente = utf8_decode($array["value"]);
-                    if($i==6)
-                        $descripcion_recibido = utf8_decode($array["value"]);
-                    if($i==7)
-                        $diferencia = utf8_decode($array["value"]);
-                    if($i==8 && $array["value"]!=NULL)
-                        $cuenta[] = $array["value"];
-                    if($i==9 && $array["value"]!=NULL)
-                        $codigo_cuenta[] = $array["value"];
-                    if($i==10 && $array["value"]!=NULL)
-                        $nombre_cuenta[] = utf8_decode($array["value"]);
-                    if($i==11 && $array["value"]!=NULL)
-                        $descripcion_cuenta[] = utf8_decode($array["value"]);
-                     if($i==12 && $array["value"]!=NULL)
-                        $valor_mask[] = utf8_decode($array["value"]);
-                    if($i==13 && $array["value"]!=NULL){
-                        $valor[] =  str_replace(",","",$array["value"]);
-                        $tipo[] = substr($array["name"],7,1);
-                    }
-                        
-                    if($i === 13)
-                        $i=8;
-                    else
-                        $i++;
-                }
-                
-                 // echo json_encode($deposito.' '.$banco_id.' '.$cliente_id.' '.$descripcion_dep.' '.$fecha.' '.$transaccion.' '.$valor_dep_unmask.' '.$cuenta[0].$cuenta[1].$descripcion_cuenta[0].$descripcion_cuenta[1].$valor[0].$valor[1].$tipo[0].$tipo[1]);
-       
-          
-              $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
-                //Inicio de transacci�n
-                $link->query("BEGIN;");
-                
-                $sql = "INSERT INTO ban_transferencia_recibida (tra_rec_numtransferencia, tra_rec_bancoid, tra_rec_clienteid, tra_rec_descripcion,tra_rec_fecha,tra_rec_valor) ";
-                $sql .= "values ('$recibida', '$banco_id', '$nom_cliente', '$descripcion_recibido','$fecha','$valor_recibido_unmask')";
-                $result = $link->query($sql);
+            echo json_encode($tr_bancarios);
+        }else{
+            echo 'vacio';
+        }
+            
+    break;
+    
+    /**************************************************************************/
+    /****************** REGISTRAR TRANSFERECIAS RECIBIDAS *********************/
+    /**************************************************************************/
+    case 'ingresar_tr':
 
-                if(!$result){
-                    echo "fallo";//"Error en la Transacci�n 1: ".$link->error;
-                    $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
-                    exit();
-                }
-        
-              $id_diario = mysqli_insert_id($link);
-                
-                for($i = 0; $i < count($cuenta); $i++){
-                  //  $sql1 = "INSERT INTO ban_banco_diario(bandia_diario, bandia_id_codigo_cuenta, bandia_detalle_descripcion, bandia_valor, bandia_tipo)";
-                     $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_id_asiento_diario, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
-                    $sql1 .= "values ('$recibida', '$cuenta[$i]', '$descripcion_cuenta[$i]', '$valor[$i]', '$tipo[$i]')"; 
-                    $result = $link->query($sql1);
-                    if(!$result){
-                        echo "fallo";
-                        $link->query("ROLLBACK;");    
-                        exit();
-                    }
-                }
+        if(isset($_REQUEST['numero'])){$numero = $_REQUEST['numero'];}
+        if(isset($_REQUEST['descripcion'])){$descripcion = utf8_decode($_REQUEST['descripcion']);}
+        if(isset($_REQUEST['fecha'])){$fecha = $_REQUEST['fecha'];}
+        if(isset($_REQUEST['total'])){$total = $_REQUEST['total'];}
+        if(isset($_REQUEST['banco'])){$banco = $_REQUEST['banco'];}
+        if(isset($_REQUEST['cliente'])){$cliente = $_REQUEST['cliente'];}
+        if(isset($_REQUEST['datos'])){
+            $parametros = json_decode($_REQUEST['datos'],true);
+        }
 
-               if ($result) {
-                    $link->query("COMMIT");      //Terminar la transaccion
-                    $query = "SELECT * FROM ban_transferencia_recibida WHERE tra_rec_id = '$id_diario'";
-                    $result_in = $link->query($query);
-                    $num_registros = $result_in->num_rows;
-                    if($num_registros > 0){
-                        while($row = $result_in->fetch_assoc()){
-                            $asientos_contables[] = array(  'id_recibido' => $row['tra_rec_id']);
-                        }
-                        echo json_encode($asientos_contables);
-                    }else{
-                        echo "fallo";
-                    }
-                }  
-               $link->query("END;");  
-           }
+        $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
+        //Inicio de transaccion
+        $link->query("BEGIN;");
 
+        $sql = "INSERT INTO ban_transferencia_recibida (tra_rec_numtransferencia, tra_rec_bancoid, tra_rec_clienteid, tra_rec_descripcion, tra_rec_fecha,tra_rec_valor)";
+        $sql .= "VALUES ('$numero', '$banco', '$cliente', '$descripcion','$fecha','$total')";
+        $result = $link->query($sql);
 
-          
-          break;
-          
+        if(!$result){
+            echo "fallo";//"Error en la Transacci�n 1: ".$link->error;
+            $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
+            exit();
+        }
 
-    case 'ingresar_trans_enviada':
+        $id_tr = mysqli_insert_id($link);
 
- if(isset($_REQUEST['filas'])){
-                $filas = $_REQUEST['filas'];
+        for($i = 0; $i < count($parametros); $i++){
+            $cuenta = $parametros[$i]["cuenta"];
+            $descripcion_detalle = utf8_decode($parametros[$i]["descripcion_detalle"]);
+            $valor_detalle = $parametros[$i]["valor_detalle"];
+            $tipo = $parametros[$i]["tipo_detalle"];
+            $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_num_asiento_detalle, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
+            $sql1 .= "VALUES ('$numero', '$cuenta', '$descripcion_detalle', $valor_detalle, '$tipo')"; 
+            $result = $link->query($sql1);
+            if(!$result){
+                echo "fallo";// Error en la Transacción 2: ".$link->error;
+                $link->query("ROLLBACK;");    //Terminar la transaccion si hay error
+                exit();
             }
-   
-     if(isset($_REQUEST['datos'])){
-                $parametros = json_decode($_REQUEST['datos'],true);
-                
-                $i=0;
-                foreach($parametros as $array){
-                    if($i==0){
-                        $enviada = $array["value"];
-                    }
-                        
-                    if($i==1)
-                        $fecha = utf8_decode($array["value"]);
-                        if($i==2)
-                        $banco_id = utf8_decode($array["value"]);
-                       
-                    if($i==3)
-                        $valor_enviado= utf8_decode($array["value"]);
-                      if($i==4)
-                        $valor_enviado_unmask = utf8_decode($array["value"]);
-                     
-                    if($i==5)
-                        $nom_cliente = utf8_decode($array["value"]);
-                    if($i==6)
-                        $descripcion_enviado = utf8_decode($array["value"]);
-                    if($i==7)
-                        $diferencia = utf8_decode($array["value"]);
-                    if($i==8 && $array["value"]!=NULL)
-                        $cuenta[] = $array["value"];
-                    if($i==9 && $array["value"]!=NULL)
-                        $codigo_cuenta[] = $array["value"];
-                    if($i==10 && $array["value"]!=NULL)
-                        $nombre_cuenta[] = utf8_decode($array["value"]);
-                    if($i==11 && $array["value"]!=NULL)
-                        $descripcion_cuenta[] = utf8_decode($array["value"]);
-                     if($i==12 && $array["value"]!=NULL)
-                        $valor_mask[] = utf8_decode($array["value"]);
-                    if($i==13 && $array["value"]!=NULL){
-                        $valor[] =  str_replace(",","",$array["value"]);
-                        $tipo[] = substr($array["name"],7,1);
-                    }
-                        
-                    if($i === 13)
-                        $i=8;
-                    else
-                        $i++;
-                }
-                
-                 // echo json_encode($deposito.' '.$banco_id.' '.$cliente_id.' '.$descripcion_dep.' '.$fecha.' '.$transaccion.' '.$valor_dep_unmask.' '.$cuenta[0].$cuenta[1].$descripcion_cuenta[0].$descripcion_cuenta[1].$valor[0].$valor[1].$tipo[0].$tipo[1]);
-       
-          
-              $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
-                //Inicio de transacci�n
-                $link->query("BEGIN;");
-                
-                $sql = "INSERT INTO ban_transferencia_enviada (tra_env_numtransferencia, tra_env_bancoid, tra_env_proveedorid, tra_env_descripcion,tra_env_fecha,tra_env_valor) ";
-                $sql .= "values ('$enviada', '$banco_id', '$nom_cliente', '$descripcion_enviado','$fecha','$valor_enviado_unmask')";
-                $result = $link->query($sql);
+        }
+        if ($result) {
+             $link->query("COMMIT");      //Terminar la transaccion
+             $query = "SELECT * FROM ban_transferencia_recibida WHERE tra_rec_id = '$id_tr'";
+             $result_in = $link->query($query);
+             $num_registros = $result_in->num_rows;
+             if($num_registros > 0){
+                 while($row = $result_in->fetch_assoc()){
+                     $registro[] = array(  'id_tr' => $row['tra_rec_id']);
+                 }
+                 echo json_encode($registro);
+             }else{
+                 echo "fallo";
+             }
+        }  
+        $link->query("END;");  
 
-                if(!$result){
-                    echo "fallo";//"Error en la Transacci�n 1: ".$link->error;
-                    $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
-                    exit();
-                }
-        
-              $id_diario = mysqli_insert_id($link);
-                
-                for($i = 0; $i < count($cuenta); $i++){
-                  //  $sql1 = "INSERT INTO ban_banco_diario(bandia_diario, bandia_id_codigo_cuenta, bandia_detalle_descripcion, bandia_valor, bandia_tipo)";
-                     $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_id_asiento_diario, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
-                    $sql1 .= "values ('$enviada', '$cuenta[$i]', '$descripcion_cuenta[$i]', '$valor[$i]', '$tipo[$i]')"; 
-                    $result = $link->query($sql1);
-                    if(!$result){
-                        echo "fallo";
-                        $link->query("ROLLBACK;");    
-                        exit();
-                    }
-                }
+    break;
+    
+    /**************************************************************************/
+    /***************** CONSULTAR TRANSFERENCIAS ENVIADAS *********************/
+    /**************************************************************************/ 
+    case 'consultar_te':
+        $query = "SELECT te.tra_env_id id_te, te.tra_env_numtransferencia numero, te.tra_env_descripcion descripcion,
+                    te.tra_env_fecha fecha, te.tra_env_valor valor, b.ban_nombre ban_nombre, b.ban_numero_cuenta num_cuenta,
+                    b.ban_tipo tipo_cuenta
+                    FROM ban_transferencia_enviada te
+                    INNER JOIN banco b ON b.ban_id = te.tra_env_bancoid
+                    WHERE te.tra_env_estado = 'activo'";
+        $result = $link->query($query);
+        $num_registros = $result->num_rows;
+        if($num_registros > 0){
+            while($row = $result->fetch_assoc()){
+                $tr_bancarios[] = array( 'id_te' => $row['id_te'],
+                                            'numero' => $row['numero'],
+                                            'nombre_banco' => $row['ban_nombre'],
+                                            'num_cuenta_banco' => $row['num_cuenta'],
+                                            'tipo_cuenta_banco' => $row['tipo_cuenta'],
+                                            'descripcion' => utf8_encode($row['descripcion']),
+                                            'fecha' => $row['fecha'],
+                                            'valor' => $row['valor']);
+            }
+            echo json_encode($tr_bancarios);
+        }else{
+            echo 'vacio';
+        }
+            
+    break;
+    
+    /**************************************************************************/
+    /****************** REGISTRAR TRANSFERECIAS ENVIADAS **********************/
+    /**************************************************************************/
+    case 'ingresar_te':
 
-               if ($result) {
-                    $link->query("COMMIT");      //Terminar la transaccion
-                    $query = "SELECT * FROM ban_transferencia_enviada WHERE tra_env_id = '$id_diario'";
-                    $result_in = $link->query($query);
-                    $num_registros = $result_in->num_rows;
-                    if($num_registros > 0){
-                        while($row = $result_in->fetch_assoc()){
-                            $asientos_contables[] = array(  'id_enviado' => $row['tra_env_id']);
-                        }
-                        echo json_encode($asientos_contables);
-                    }else{
-                        echo "fallo";
-                    }
-                }  
-               $link->query("END;");  
-           }
+        if(isset($_REQUEST['numero'])){$numero = $_REQUEST['numero'];}
+        if(isset($_REQUEST['descripcion'])){$descripcion = utf8_decode($_REQUEST['descripcion']);}
+        if(isset($_REQUEST['fecha'])){$fecha = $_REQUEST['fecha'];}
+        if(isset($_REQUEST['total'])){$total = $_REQUEST['total'];}
+        if(isset($_REQUEST['banco'])){$banco = $_REQUEST['banco'];}
+        if(isset($_REQUEST['proveedor'])){$proveedor = $_REQUEST['proveedor'];}
+        if(isset($_REQUEST['datos'])){
+            $parametros = json_decode($_REQUEST['datos'],true);
+        }
 
+        $link->query("SET AUTOCOMMIT=0;"); //Para InnoDB, sirve para mantener la transaccion abierta
+        //Inicio de transaccion
+        $link->query("BEGIN;");
 
-          
-          break;
-        
+        $sql = "INSERT INTO ban_transferencia_enviada (tra_env_numtransferencia, tra_env_bancoid, tra_env_proveedorid, tra_env_descripcion, tra_env_fecha,tra_env_valor)";
+        $sql .= "VALUES ('$numero', '$banco', '$proveedor', '$descripcion','$fecha','$total')";
+        $result = $link->query($sql);
+
+        if(!$result){
+            echo "fallo";//"Error en la Transacci�n 1: ".$link->error;
+            $link->query("ROLLBACK;");           //Terminar la transaccion si hay error
+            exit();
+        }
+
+        $id_te = mysqli_insert_id($link);
+
+        for($i = 0; $i < count($parametros); $i++){
+            $cuenta = $parametros[$i]["cuenta"];
+            $descripcion_detalle = utf8_decode($parametros[$i]["descripcion_detalle"]);
+            $valor_detalle = $parametros[$i]["valor_detalle"];
+            $tipo = $parametros[$i]["tipo_detalle"];
+            $sql1 = "INSERT INTO cont_detalle_asiento_diario(cont_num_asiento_detalle, cont_id_codigo_cuenta, cont_detalle_descripcion, cont_valor, cont_tipo)";
+            $sql1 .= "VALUES ('$numero', '$cuenta', '$descripcion_detalle', $valor_detalle, '$tipo')"; 
+            $result = $link->query($sql1);
+            if(!$result){
+                echo "fallo";// Error en la Transacción 2: ".$link->error;
+                $link->query("ROLLBACK;");    //Terminar la transaccion si hay error
+                exit();
+            }
+        }
+        if ($result) {
+             $link->query("COMMIT");      //Terminar la transaccion
+             $query = "SELECT * FROM ban_transferencia_enviada WHERE tra_env_id = '$id_te'";
+             $result_in = $link->query($query);
+             $num_registros = $result_in->num_rows;
+             if($num_registros > 0){
+                 while($row = $result_in->fetch_assoc()){
+                     $registro[] = array(  'id_te' => $row['tra_env_id']);
+                 }
+                 echo json_encode($registro);
+             }else{
+                 echo "fallo";
+             }
+        }  
+        $link->query("END;");  
+
+    break;
+    
     case 'ultimo_diario_mes':
         $fecha = $_POST['mes'];
         $query = "SELECT * FROM ban_deposito_bancario WHERE dep_numdeposito like '%DE-".$fecha."%' ORDER BY dep_id DESC LIMIT 1";
@@ -745,35 +722,35 @@
         }
     break;
 
- case 'ultimo_diario_mes_trans_rec':
-            $fecha = $_POST['mes'];
-            $query = "SELECT * FROM ban_transferencia_recibida WHERE tra_rec_numtransferencia like '%TR-".$fecha."%' ORDER BY tra_rec_id DESC LIMIT 1";
-            $result = $link->query($query);
-            $num_registros = $result->num_rows;
-            if($num_registros > 0){
-                while($row = $result->fetch_assoc()){
-                    $ultimo_asiento = $row['tra_rec_numtransferencia'];
-                }
-                echo $ultimo_asiento;
-            }else{
-                echo '0';
+    case 'ultimo_diario_mes_trans_rec':
+        $fecha = $_POST['mes'];
+        $query = "SELECT * FROM ban_transferencia_recibida WHERE tra_rec_numtransferencia like '%TR-".$fecha."%' ORDER BY tra_rec_id DESC LIMIT 1";
+        $result = $link->query($query);
+        $num_registros = $result->num_rows;
+        if($num_registros > 0){
+            while($row = $result->fetch_assoc()){
+                $ultimo_asiento = $row['tra_rec_numtransferencia'];
             }
-        break;
+            echo $ultimo_asiento;
+        }else{
+            echo '0';
+        }
+    break;
 
-         case 'ultimo_diario_mes_trans_env':
-            $fecha = $_POST['mes'];
-            $query = "SELECT * FROM ban_transferencia_enviada WHERE tra_env_numtransferencia like '%TE-".$fecha."%' ORDER BY tra_env_id DESC LIMIT 1";
-            $result = $link->query($query);
-            $num_registros = $result->num_rows;
-            if($num_registros > 0){
-                while($row = $result->fetch_assoc()){
-                    $ultimo_asiento = $row['tra_env_numtransferencia'];
-                }
-                echo $ultimo_asiento;
-            }else{
-                echo '0';
-            }
-        break;
+    case 'ultimo_diario_mes_trans_env':
+       $fecha = $_POST['mes'];
+       $query = "SELECT * FROM ban_transferencia_enviada WHERE tra_env_numtransferencia like '%TE-".$fecha."%' ORDER BY tra_env_id DESC LIMIT 1";
+       $result = $link->query($query);
+       $num_registros = $result->num_rows;
+       if($num_registros > 0){
+           while($row = $result->fetch_assoc()){
+               $ultimo_asiento = $row['tra_env_numtransferencia'];
+           }
+           echo $ultimo_asiento;
+       }else{
+           echo '0';
+       }
+    break;
 
         case 'ultimo_cheque_banco':
             $bancoid = $_POST['banco'];

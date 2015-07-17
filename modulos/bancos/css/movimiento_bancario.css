@@ -125,12 +125,13 @@ ul li a{
     margin-left: -15px !important;
 }
 #registro_bancario th, #tabla_depositos th, #tabla_egresos th, #tabla_bancos th, #tabla_credito th,
-#tabla_debito th{
+#tabla_debito th, #tabla_tr th, #tabla_te th{
     font-size: 13px !important;
     border: 1px solid #ccc !important;
     border-radius: 4px;
 }
-#tabla_depositos td, #tabla_egresos td, #tabla_bancos td, #tabla_credito td, #tabla_debito td{
+#tabla_depositos td, #tabla_egresos td, #tabla_bancos td, #tabla_credito td, #tabla_debito td,
+#tabla_tr td, #tabla_te td{
     font-size: 12px !important;
     border: 1px solid #ccc !important;
     border-radius: 4px;
